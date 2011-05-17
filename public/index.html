@@ -1,0 +1,74 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+    <head> 
+        <meta charset="utf-8"> 
+        <title>Timer</title> 
+        <link rel="stylesheet" href="stylesheets/demo.css" type="text/css" media="screen"> 
+        <link rel="stylesheet" href="stylesheets/demo-print.css" type="text/css" media="print"> 
+        <script src="javascripts/raphael.js"></script> 
+        <style media="screen"> 
+            body {
+                margin: 0;
+                padding: 0;
+                text-align: center;
+            }
+            h1 {
+                font-weight: 400;
+                height: 5%;
+            }
+            #canvas {
+                height: 480px;
+                margin: 0 auto;
+                text-align: left;
+                width: 640px;
+				padding: 40px;
+            }
+            #minutes {
+				font-size: 1em;
+				text-align:center;
+				margin: 10px;
+				width: 10%;
+            }
+            #sit {
+				font-size: 1em;
+				margin: 10px;
+            }
+			#control {
+				font-size: 2em;
+			}
+        </style> 
+        <script> 	
+			/* new Function is not compiled, which allows us to grab the minutes entered by the user
+			   before using the function */
+			function buildMyTimer(time){
+				var milli = time * 1000 * 60;
+				return new Function("paper", "window", "document", "paper.circle(320, 240, 240).animate({fill: '#f00', r: '0'}," + milli + ");");
+			}
+					
+            window.onload = function () {
+                var paper = Raphael("canvas", 640, 480),
+                    btn = document.getElementById("sit"),
+					minutes = document.getElementById("minutes");
+					
+				paper.clear();
+                paper.rect(0, 0, 640, 480, 10).attr({fill: "#fff", stroke: "none"});
+ 
+                btn.onclick = function () {
+                    paper.clear();
+                    paper.rect(0, 0, 640, 480, 10).attr({fill: "#fff", stroke: "none"});
+					var timerFunction = buildMyTimer(minutes.value);
+                    try {
+                        (buildMyTimer(minutes.value)).call(paper, paper);
+                    } catch (e) {
+                        alert(e.message || e);
+                    }
+                };
+            };
+        </script> 
+    </head> 
+    <body> 
+        <div id="canvas"></div> 
+        <div id="control"><button id="sit" type="button">Sit</button><input id="minutes" type="text" value="5"/>minutes</div> 
+		<p id="copy">built with <a href="http://raphaeljs.com/">Raphaël</a>—JavaScript Vector Library</p> 
+    </body> 
+</html>
